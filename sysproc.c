@@ -89,3 +89,24 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+// memsize 시스템 콜 구현
+int
+sys_memsize(void)
+{
+  uint size;
+  struct proc *p;
+  p = myproc();
+  size = p -> sz;
+  return size;
+}
+
+// trace 시스템 콜 구현
+int
+sys_trace(void)
+{
+  struct proc *p;
+  p = myproc();
+  argint(0, &myproc()->tracemask);
+  return p->tracemask;
+}

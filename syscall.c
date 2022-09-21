@@ -103,6 +103,8 @@ extern int sys_unlink(void);
 extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
+extern int sys_memsize(void);
+extern int sys_trace(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -126,6 +128,34 @@ static int (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+[SYS_memsize] sys_memsize,
+[SYS_trace] sys_trace,
+};
+
+char *syscallnames[] = {
+[SYS_fork]    "fork",
+[SYS_exit]    "exit",
+[SYS_wait]    "wait",
+[SYS_pipe]    "pipe",
+[SYS_read]    "read",
+[SYS_kill]    "kill",
+[SYS_exec]    "exec",
+[SYS_fstat]   "fstat",
+[SYS_chdir]   "chdir",
+[SYS_dup]     "dup",
+[SYS_getpid]  "getpid",
+[SYS_sbrk]    "sbrk",
+[SYS_sleep]   "sleep",
+[SYS_uptime]  "uptime",
+[SYS_open]    "open",
+[SYS_write]   "write",
+[SYS_mknod]   "mknod",
+[SYS_unlink]  "unlink",
+[SYS_link]    "link",
+[SYS_mkdir]   "mkdir",
+[SYS_close]   "close",
+[SYS_memsize] "memsize",
+[SYS_trace] "trace",
 };
 
 void
@@ -141,5 +171,35 @@ syscall(void)
     cprintf("%d %s: unknown sys call %d\n",
             curproc->pid, curproc->name, num);
     curproc->tf->eax = -1;
+  }
+  // trace
+  if ((curproc->tracemask >> num) == 1) {
+    cprintf("syscall traced: pid = %d, ", curproc->pid);
+    switch(num) {
+      case 1: cprintf("syscall = fork, "); break;
+      case 2: cprintf("syscall = exit, "); break;
+      case 3: cprintf("syscall = wait, "); break;
+      case 4: cprintf("syscall = pipe, "); break;
+      case 5: cprintf("syscall = read, "); break;
+      case 6: cprintf("syscall = kill, "); break;
+      case 7: cprintf("syscall = exec, "); break;
+      case 8: cprintf("syscall = fstat, "); break;
+      case 9: cprintf("syscall = chdir, "); break;
+      case 10: cprintf("syscall = dup, "); break;
+      case 11: cprintf("syscall = getpid, "); break;
+      case 12: cprintf("syscall = sbrk, "); break;
+      case 13: cprintf("syscall = sleep, "); break;
+      case 14: cprintf("syscall = uptime, "); break;
+      case 15: cprintf("syscall = open, "); break;
+      case 16: cprintf("syscall = write, "); break;
+      case 17: cprintf("syscall = mknod, "); break;
+      case 18: cprintf("syscall = unlink, "); break;
+      case 19: cprintf("syscall = link, "); break;
+      case 20: cprintf("syscall = mkdir, "); break;
+      case 21: cprintf("syscall = close, "); break;
+      case 22: cprintf("syscall = memsize, "); break;
+      case 23: cprintf("syscall = trace, "); break;
+    }
+    cprintf("%d returned\n", curproc->tf->eax);
   }
 }
