@@ -147,7 +147,7 @@ syscall(void)
     curproc->tf->eax = -1;
   }
   // trace
-  if ((curproc->tracemask >> num) == 1) {
+  if ((curproc->tracemask >> num) & 1) {
     cprintf("syscall traced: pid = %d, ", curproc->pid);
     switch(num) {
       case 1: cprintf("syscall = fork, "); break;
