@@ -107,6 +107,6 @@ sys_trace(void)
 {
   struct proc *p;
   p = myproc();
-  argint(0, &myproc()->tracemask);
+  argint(0, &p->tracemask);
   return p->tracemask;
 }

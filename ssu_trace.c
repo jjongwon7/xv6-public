@@ -6,6 +6,6 @@ int main(int argc, char* argv[])
 {
     trace(atoi(argv[1]));
     exec(argv[2], &argv[2]);
-    wait();
+    printf(1, "exec error\n");
     exit();
 }
