@@ -90,23 +90,21 @@ sys_uptime(void)
   return xticks;
 }
 
-// memsize 시스템 콜 구현
+// 20182651 전종원
+// weightset 시스템 콜 구현
 int
-sys_memsize(void)
+sys_weightset(void)
 {
-  uint size;
-  struct proc *p;
-  p = myproc();
-  size = p -> sz;
-  return size;
-}
-
-// trace 시스템 콜 구현
-int
-sys_trace(void)
-{
-  struct proc *p;
-  p = myproc();
-  argint(0, &p->tracemask);
-  return p->tracemask;
+  int weight;
+  // argint 에러 처리
+  if(argint(0, &weight)<0)
+    return -1;
+  
+  // 전달받은 weight가 0인 경우 에러 처리
+  if(weight == 0)
+    return -1;
+  
+  // do_wegightset을 호출하여 weight 부여
+  do_weightset(weight);
+  return weight;
 }

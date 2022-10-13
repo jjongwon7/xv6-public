@@ -103,8 +103,7 @@ extern int sys_unlink(void);
 extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
-extern int sys_memsize(void);
-extern int sys_trace(void);
+extern int sys_weightset(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -128,8 +127,7 @@ static int (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
-[SYS_memsize] sys_memsize,
-[SYS_trace] sys_trace,
+[SYS_weightset] sys_weightset,
 };
 
 void
@@ -145,35 +143,5 @@ syscall(void)
     cprintf("%d %s: unknown sys call %d\n",
             curproc->pid, curproc->name, num);
     curproc->tf->eax = -1;
-  }
-  // trace
-  if ((curproc->tracemask >> num) & 1) {
-    cprintf("syscall traced: pid = %d, ", curproc->pid);
-    switch(num) {
-      case 1: cprintf("syscall = fork, "); break;
-      case 2: cprintf("syscall = exit, "); break;
-      case 3: cprintf("syscall = wait, "); break;
-      case 4: cprintf("syscall = pipe, "); break;
-      case 5: cprintf("syscall = read, "); break;
-      case 6: cprintf("syscall = kill, "); break;
-      case 7: cprintf("syscall = exec, "); break;
-      case 8: cprintf("syscall = fstat, "); break;
-      case 9: cprintf("syscall = chdir, "); break;
-      case 10: cprintf("syscall = dup, "); break;
-      case 11: cprintf("syscall = getpid, "); break;
-      case 12: cprintf("syscall = sbrk, "); break;
-      case 13: cprintf("syscall = sleep, "); break;
-      case 14: cprintf("syscall = uptime, "); break;
-      case 15: cprintf("syscall = open, "); break;
-      case 16: cprintf("syscall = write, "); break;
-      case 17: cprintf("syscall = mknod, "); break;
-      case 18: cprintf("syscall = unlink, "); break;
-      case 19: cprintf("syscall = link, "); break;
-      case 20: cprintf("syscall = mkdir, "); break;
-      case 21: cprintf("syscall = close, "); break;
-      case 22: cprintf("syscall = memsize, "); break;
-      case 23: cprintf("syscall = trace, "); break;
-    }
-    cprintf("%d returned\n", curproc->tf->eax);
   }
 }
