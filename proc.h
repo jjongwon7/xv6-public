@@ -49,8 +49,7 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
-  int tracemask;               // trace mask
-  long priority;          // Process priority
+  long long priority;          // Process priority
   int weight;                  // Process weight
 };
 

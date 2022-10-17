@@ -22,7 +22,7 @@ int weight = 1;
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
-  long min_priority;
+  long long min_priority;
 } ptable;
 
 static struct proc *initproc;
@@ -287,7 +287,6 @@ fork(void)
     np->state = UNUSED;
     return -1;
   }
-  np->tracemask = curproc->tracemask;
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
@@ -412,7 +411,6 @@ wait(void)
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
 
-
 // 20182651 전종원
 void
 scheduler(void)
@@ -449,6 +447,8 @@ scheduler(void)
     update_priority(p); // 우선순위를 갱신하고
     update_min_priority(); // ptable에 있는 min_priority를 갱신한다.
     
+    // Process is done running for now.
+    // It should have changed its p->state before coming back.
     c->proc = 0;
     release(&ptable.lock); // 락을 풀어준다.
   }
@@ -560,12 +560,12 @@ wakeup1(void *chan)
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     if(p->state == SLEEPING && p->chan == chan)
-      {
-        p->state = RUNNABLE;
-        // 20182651 전종원
-        // wake up 된 프로세스의 우선순위를 ptable에서 관리하는 min_priority 값으로 부여한다.
-        assign_min_priority(p);
-      }
+    {
+      p->state = RUNNABLE;
+      // 20182651 전종원
+      // wake up 된 프로세스의 우선순위를 ptable에서 관리하는 min_priority 값으로 부여한다.
+      assign_min_priority(p);
+    }
 }
 
 // Wake up all processes sleeping on chan.
@@ -641,6 +641,6 @@ procdump(void)
 void do_weightset(int weight)
 {
   acquire(&ptable.lock); // 락을 걸고 작업을 수행한다.
-  myproc()->weight = weight; // 현재 프로세스의 weight에 인자로 전닮받은 가중치 부여
+  myproc()->weight = weight; // 현재 프로세스의 weight에 인자로 전달받은 가중치 부여
   release(&ptable.lock); // 락을 풀어준다.
 }

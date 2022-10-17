@@ -104,7 +104,7 @@ sys_weightset(void)
   if(weight == 0)
     return -1;
   
-  // do_wegightset을 호출하여 weight 부여
+  // do_weightset을 호출하여 weight 부여
   do_weightset(weight);
   return weight;
 }
