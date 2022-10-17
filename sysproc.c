@@ -89,3 +89,22 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+// 20182651 전종원
+// weightset 시스템 콜 구현
+int
+sys_weightset(void)
+{
+  int weight;
+  // argint 에러 처리
+  if(argint(0, &weight)<0)
+    return -1;
+  
+  // 전달받은 weight가 0인 경우 에러 처리
+  if(weight == 0)
+    return -1;
+  
+  // do_weightset을 호출하여 weight 부여
+  do_weightset(weight);
+  return weight;
+}

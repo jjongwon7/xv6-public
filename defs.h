@@ -120,6 +120,10 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
+// 20182651 전종원
+// do_weightset 함수 선언
+void            do_weightset(int);
+
 
 // swtch.S
 void            swtch(struct context**, struct context*);
